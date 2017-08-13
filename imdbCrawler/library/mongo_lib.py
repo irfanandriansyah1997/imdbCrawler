@@ -1,7 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from pymongo import errors
 import pymongo
-import traceback
 
 
 class mongoLib:
