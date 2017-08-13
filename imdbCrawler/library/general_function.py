@@ -1,6 +1,4 @@
-import os
 import time
-from ConfigParser import ConfigParser
 
 __author__ = 'Irfan Andriansyah'
 
