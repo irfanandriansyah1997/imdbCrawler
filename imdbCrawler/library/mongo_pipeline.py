@@ -1,9 +1,10 @@
-from pymongo.mongo_client import MongoClient
-from pymongo import errors
 import pymongo
 
+from pymongo import errors
+from scrapy.exceptions import DropItem
+from pymongo.mongo_client import MongoClient
 
-class mongoLib:
+class MongoPipeline(object):
     def __init__(self, host, port, db):
         """Pemanggilan fungsi MongoClient dan membuat cursor koneksi pada database
 
@@ -19,6 +20,18 @@ class mongoLib:
             raise ValueError(e)
         except Exception, e:
             raise ValueError(e)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            host = crawler.settings.get('MONGODB_HOST'),
+            port=crawler.settings.get('MONGODB_PORT'),
+            db=crawler.settings.get('MONGODB_DB')
+        )
+
+    def process_item(self, item, spider):
+        print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
+        return item
 
     def get(self, table, field = None, where = None, limit = None, sort = None):
         """Mengambil semua data dengan kriteria tertentu sesuai parameter
@@ -154,7 +167,6 @@ class mongoLib:
         except Exception, e:
             raise ValueError(e.message)
 
-
     def insertOne(self, table, data):
         """Menambahkan semua data sesuai dengan parameter
 
@@ -185,62 +197,5 @@ class mongoLib:
                     raise ValueError({'code': 404, 'message': 'No matched Data'})
             else:
                 raise ValueError({'code': 500, 'message': 'Attribut data is not found'})
-        except Exception, e:
-            raise ValueError(e)
-
-    def getDatabase(self, database, mode, address, dev = False, reprocess = False):
-        db_list = {}
-        kota = database.get('topic', None, {})
-
-        for data in kota['data']:
-            nameCity = data['t_kode_kota']
-            if dev:
-                nameDatabase = 'dev_smartcity_{}'.format(data['t_kode_kota'])
-            else:
-                nameDatabase = 'smartcity_{}'.format(data['t_kode_kota'])
-
-            db_list.update({nameCity: mongoLib(address, 27017, nameDatabase)})
-
-        db_list.update({'temporary' : mongoLib(address, 27017, 'smartcity_temporary')})
-
-
-        try:
-            if mode not in db_list:
-                raise ValueError('Database is not found {} in main server'.format(mode))
-            else:
-                return db_list if reprocess == True else db_list[mode]
-        except errors.PyMongoError, e:
-            raise ValueError(e)
-        except Exception, arg:
-            raise ValueError('Error : {}'.format(arg))
-
-    def CursorIntoObject(self, data):
-        try:
-            result = dict()
-            result.update({'items' : []})
-            result.update({'count': 0})
-
-            for k in data:
-                del k['_id']
-                result['items'].append(k)
-                result['count'] = len(result['items'])
-
-            return result
-        except Exception, e:
-            raise ValueError(e)
-        except errors.CursorNotFound, e:
-            raise ValueError(e)
-        except errors.PyMongoError, e:
-            raise ValueError(e)
-
-    def multiDictToColumnar(self, data, prefix, type = 'string'):
-        try:
-            if type == 'string':
-                column = {'{}.{}'.format(prefix, k): v for k, v in data.items()}
-                return column
-            elif type == 'column':
-                var = dict()
-                var.update({prefix :  {k : v for k, v in data.items()}})
-                return var
         except Exception, e:
             raise ValueError(e)

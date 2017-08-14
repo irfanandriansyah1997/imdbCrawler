@@ -64,9 +64,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'imdbCrawler.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'imdbCrawler.library.required_fields_pipeline.RequiredFieldsPipeline': 300,
+    'imdbCrawler.library.mongo_pipeline.MongoPipeline': 400,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -95,7 +96,7 @@ LOG_LEVEL = 'INFO'
 # Mongo Setting
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
-MONGODB_DB = 'movie.co'
+MONGODB_DB = 'movieDB'
 
 # Collection Setting
 COLLECTION = {
