@@ -1,3 +1,6 @@
+## 0.2.1 (August 15, 2017)
+
+
 ## 0.2.0 (August 15, 2017)
   - Merge branch 'feature/actress-list' into develop
   - Update code: .> Add class for model consume data from crawler .> Remove print tag in library .> Update method process item in mongo pipeline .> Add parameter mongo requirement and add method convert photo
