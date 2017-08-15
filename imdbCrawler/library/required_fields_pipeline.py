@@ -20,7 +20,6 @@ class RequiredFieldsPipeline(object):
 
     @check_pipeline
     def process_item(self, item, spider):
-        print '******************************************************'
         for field in spider.required_fields:
             if not item.get(field):
                 raise DropItem("Field '%s' missing: %r" % (field, item))

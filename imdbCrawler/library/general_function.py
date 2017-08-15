@@ -1,6 +1,10 @@
 import time
 
 __author__ = 'Irfan Andriansyah'
+__url__ = {
+    'hd' : '@._V1_.jpg',
+    'medium': '@._V1_UY317_CR121,0,214,317_AL_.jpg'
+}
 
 def tic(tag=None):
     """Start timer function.
@@ -53,4 +57,9 @@ def toc(tag=None, save=False, fmt=False):
     else:
         print "no tic() start time available. Check global var settings"
 
+def convert_photo(url):
+    temp = url.split('@')
+    picture = {k: '{}@{}'.format(temp[0], v) if len(temp) > 2 else '{}{}'.format(temp[0], v) for k, v in __url__.items()}
+    picture.update({'small': url})
 
+    return picture

@@ -3,6 +3,7 @@ import scrapy
 
 from imdbCrawler.items import ActressList
 from imdbCrawler.library.mongo_pipeline import MongoPipeline
+from imdbCrawler.library.general_function import convert_photo
 from imdbCrawler.library.required_fields_pipeline import RequiredFieldsPipeline
 
 class ActressListSpider(scrapy.Spider):
@@ -17,6 +18,10 @@ class ActressListSpider(scrapy.Spider):
 
     ])
     required_fields = ['actress_id', 'actress_link', 'actress_name', 'actress_photo']
+    mongo_requirement = {
+        'primary' : 'actress_id',
+        'collection' : 'actress'
+    }
 
     def __init__(self, data):
         scrapy.Spider.__init__(self)
@@ -40,7 +45,9 @@ class ActressListSpider(scrapy.Spider):
         products = response.css('#main > table.results > tr.detailed')
         for item in products:
             name = item.css('td.name > a::text').extract_first().strip()
-            photo = item.css('td.image > a > img::attr(src)').extract_first().strip()
+            # photo
+            photo = convert_photo(item.css('td.image > a > img::attr(src)').extract_first().strip())
+
             button = item.css('td.name > a::attr(href)').extract_first().strip()
 
             item = ActressList()

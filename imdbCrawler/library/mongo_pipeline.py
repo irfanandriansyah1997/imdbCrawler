@@ -1,7 +1,11 @@
+import json
+import traceback
+
 import pymongo
 
 from pymongo import errors
 from scrapy.exceptions import DropItem
+from imdbCrawler.consumer.actress import ActressConsumer
 from pymongo.mongo_client import MongoClient
 
 class MongoPipeline(object):
@@ -16,6 +20,7 @@ class MongoPipeline(object):
         try:
             self.connection = MongoClient('mongodb://{}:{}'.format(host, port))
             self.db = self.connection[db]
+            self.actress = ActressConsumer()
         except errors.PyMongoError, e:
             raise ValueError(e)
         except Exception, e:
@@ -30,8 +35,24 @@ class MongoPipeline(object):
         )
 
     def process_item(self, item, spider):
-        print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
+        data = dict()
+        primary_key = spider.mongo_requirement.get('primary')
+        collection = spider.mongo_requirement.get('collection')
+
+        if 'actress' in spider.name:
+            data = ActressConsumer(item).get_dict()
+
+        check_data = self.get(collection, where={'actress_id': item.get(primary_key)})
+
+        if check_data.get('count') > 0:
+            self.updateOne(collection, data, {'key': primary_key, 'value': str(item.get(primary_key))})
+        else:
+            self.insertOne(collection, data)
+
         return item
+
+    def close_spider(self, spider):
+        self.connection.close()
 
     def get(self, table, field = None, where = None, limit = None, sort = None):
         """Mengambil semua data dengan kriteria tertentu sesuai parameter
@@ -183,8 +204,10 @@ class MongoPipeline(object):
             self.db[table].insert_one(dict(data))
             return {'code': 200, 'message': 'Insert Success'}
         except errors.PyMongoError, e:
+            print traceback.print_exc()
             raise ValueError(e)
         except Exception, e:
+            print traceback.print_exc()
             raise ValueError(e)
 
     def findAndModify(self, table, filter, update, sort):
