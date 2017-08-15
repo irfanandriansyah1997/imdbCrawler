@@ -64,9 +64,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'imdbCrawler.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'imdbCrawler.library.required_fields_pipeline.RequiredFieldsPipeline': 300,
+    'imdbCrawler.library.mongo_pipeline.MongoPipeline': 400,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -88,3 +89,28 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Log Level
+LOG_LEVEL = 'INFO'
+
+# Mongo Setting
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_DB = 'movieDB'
+
+# Collection Setting
+COLLECTION = {
+    'actress' : 'actress',
+    'movie': 'movie'
+}
+
+# Crawler Setting
+ALLOWED_DOMAIN = [
+    "http://www.imdb.com",
+    "www.imdb.com",
+    "imdb.com"
+]
+START_URL = {
+    'actress-list' : ['http://www.imdb.com/search/name?gender=male,female&sort=starmeter,asc&start=0']
+}
+BASE_URL = 'http://www.imdb.com'

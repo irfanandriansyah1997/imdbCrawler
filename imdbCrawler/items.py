@@ -7,8 +7,31 @@
 
 import scrapy
 
+class ActressList(scrapy.Item):
+    actress_id = scrapy.Field()
+    actress_link = scrapy.Field()
+    actress_name = scrapy.Field()
+    actress_photo = scrapy.Field()
 
-class ImdbcrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ActressDetail(scrapy.Item):
+    actress_id = scrapy.Field()
+    actress_link = scrapy.Field()
+    actress_name = scrapy.Field()
+    actress_category = scrapy.Field()
+    actress_birth_date = scrapy.Field()
+    actress_filmography = scrapy.Field()
+    actress_personal_detail = scrapy.Field()
+
+class ActressBio(scrapy.Item):
+    actress_id = scrapy.Field()
+    actress_link = scrapy.Field()
+    actress_name = scrapy.Field()
+    actress_height = scrapy.Field()
+    actress_birth_date = scrapy.Field()
+    actress_birth_name = scrapy.Field()
+
+class ActressPhoto(scrapy.Item):
+    actress_id = scrapy.Field()
+    actress_link = scrapy.Field()
+    actress_name = scrapy.Field()
+    actress_photo = scrapy.Field()
