@@ -41,6 +41,7 @@ class MongoPipeline(object):
 
         if 'actress' in spider.name:
             data = ActressConsumer(item).get_dict()
+            data = {k: v for k, v in data.items() if v is not None and v != "" and v != {} and v != []}
 
         check_data = self.get(collection, where={'actress_id': item.get(primary_key)})
 
