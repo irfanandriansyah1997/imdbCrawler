@@ -3,6 +3,9 @@ class ActressConsumer:
     actress_link = None
     actress_name = None
     actress_photo = {}
+    actress_category = []
+    actress_filmography = []
+    actress_height = None
 
     def __init__(self, data=dict()):
         if data:
@@ -16,6 +19,9 @@ class ActressConsumer:
         response.update({'{}link'.format(prefix) : self.actress_link})
         response.update({'{}name'.format(prefix) : self.actress_name})
         response.update({'{}photo'.format(prefix) : self.actress_photo})
+        response.update({'{}category'.format(prefix): self.actress_category})
+        response.update({'{}filmography'.format(prefix): self.actress_filmography})
+        response.update({'{}height'.format(prefix): self.actress_height})
 
         return response
 
@@ -24,12 +30,19 @@ class ActressConsumer:
         self.actress_link = str(data.get('actress_link').encode('utf-8')) if data.get('actress_link') is not None else None
         self.actress_name = str(data.get('actress_name').encode('utf-8')) if data.get('actress_name') is not None else None
         self.actress_photo = data.get('actress_photo') if data.get('actress_photo') is not None else {}
+        self.actress_category = data.get('actress_category') if data.get('actress_category') is not None else []
+        self.actress_filmography = data.get('actress_filmography') if data.get('actress_filmography') is not None else []
+        self.actress_height = str(data.get('actress_height').encode('utf-8')) if data.get('actress_height') is not None else []
+
 
     def reset_dict(self):
         self.actress_id = None
         self.actress_link = None
         self.actress_name = None
         self.actress_photo = None
+        self.actress_category = []
+        self.actress_filmography = []
+        self.actress_height = None
 
 
 
