@@ -1,3 +1,6 @@
+## 0.2.2 (August 19, 2017)
+
+
 ## 0.2.1 (August 15, 2017)
   - Add file requirements.txt for info installed packages
 
