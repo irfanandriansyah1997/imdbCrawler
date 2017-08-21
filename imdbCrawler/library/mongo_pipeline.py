@@ -1,15 +1,15 @@
-import json
+import os
 import traceback
 
 import pymongo
 
 from pymongo import errors
-from scrapy.exceptions import DropItem
+from imdbCrawler.library.logger import Logger
 from imdbCrawler.consumer.actress import ActressConsumer
 from pymongo.mongo_client import MongoClient
 
 class MongoPipeline(object):
-    def __init__(self, host, port, db):
+    def __init__(self, host, port, db, logger = 'log'):
         """Pemanggilan fungsi MongoClient dan membuat cursor koneksi pada database
 
         :param host : (String) host database
@@ -21,6 +21,13 @@ class MongoPipeline(object):
             self.connection = MongoClient('mongodb://{}:{}'.format(host, port))
             self.db = self.connection[db]
             self.actress = ActressConsumer()
+
+            directory = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                logger
+            )
+
+            self.logger = Logger(directory, 'crawler.imdb')
         except errors.PyMongoError, e:
             raise ValueError(e)
         except Exception, e:
@@ -31,7 +38,8 @@ class MongoPipeline(object):
         return cls(
             host = crawler.settings.get('MONGODB_HOST'),
             port=crawler.settings.get('MONGODB_PORT'),
-            db=crawler.settings.get('MONGODB_DB')
+            db=crawler.settings.get('MONGODB_DB'),
+            logger=crawler.settings.get('LOGGER_PATH')
         )
 
     def process_item(self, item, spider):
@@ -46,9 +54,20 @@ class MongoPipeline(object):
         check_data = self.get(collection, where={'actress_id': item.get(primary_key)})
 
         if check_data.get('count') > 0:
-            self.updateOne(collection, data, {'key': primary_key, 'value': str(item.get(primary_key))})
+            query = self.updateOne(collection, data, {'key': primary_key, 'value': str(item.get(primary_key))})
+
+            if query.get('code') == 200:
+                self.logger.print_log_to_file(
+                    'Success update data into collection {} : {}'.format(collection, item.get(primary_key)), type='INFO'
+                )
         else:
-            self.insertOne(collection, data)
+            query = self.insertOne(collection, data)
+
+            if query.get('code') == 200:
+                self.logger.print_log_to_file(
+                    'Success insert data into collection {} : {}'.format(collection, item.get(primary_key)), type='INFO'
+                )
+
 
         return item
 

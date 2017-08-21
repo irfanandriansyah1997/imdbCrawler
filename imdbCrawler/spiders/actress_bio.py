@@ -16,7 +16,7 @@ class ActressDetailSpider(scrapy.Spider):
     start_urls = []
     collection = None
     pipeline = set([MongoPipeline, RequiredFieldsPipeline])
-    required_fields = ["actress_id", "actress_height", "actress_birth", "actress_bio"]
+    required_fields = ["actress_id", "actress_bio"]
     mongo_requirement = {
         "primary": "actress_id",
         "collection": "actress",
