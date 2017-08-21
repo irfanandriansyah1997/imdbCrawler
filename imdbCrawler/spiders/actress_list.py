@@ -26,12 +26,15 @@ class ActressListSpider(scrapy.Spider):
 
     def __init__(self, data):
         scrapy.Spider.__init__(self)
+        self.per_page = 50
         self.base_url = data.get("base_url")
         self.collection = data.get("collection").get("actress")
         self.allowed_domains = [x for x in data.get("allowed_domains")]
-        self.start_urls.append(data.get("start_url").get("actress-list")[0])
+        
+        self.start_urls = self.populate_start_urls(data.get("start_url").get("actress-list")[0], 4)
 
-        print self.start_urls
+    def populate_start_urls(self, url, range_loop):
+        return [url.replace("start=0", "start={}".format(index * self.per_page)) for index in range(0, range_loop)]
 
     @classmethod
     def from_crawler(cls, crawler):
