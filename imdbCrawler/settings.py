@@ -114,3 +114,4 @@ START_URL = {
     'actress-list' : ['http://www.imdb.com/search/name?gender=male,female&sort=starmeter,asc&start=0']
 }
 BASE_URL = 'http://www.imdb.com'
+LOGGER_PATH = 'log'
