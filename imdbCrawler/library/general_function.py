@@ -3,8 +3,14 @@ from datetime import datetime
 
 __author__ = "Irfan Andriansyah"
 __url__ = {
-    "hd" : "@._V1_.jpg",
-    "medium": "@._V1_UY317_CR121,0,214,317_AL_.jpg"
+    "photo": {
+        "hd": "@._V1_.jpg",
+        "medium": "@._V1_UY317_CR121,0,214,317_AL_.jpg"
+    },
+    "media": {
+        "hd": "@._V1_.jpg",
+        "medium": "@._V1_SY1000_CR0,0,1502,1000_AL_.jpg"
+    }
 }
 
 def tic(tag=None):
@@ -58,10 +64,32 @@ def toc(tag=None, save=False, fmt=False):
     else:
         print "no tic() start time available. Check global var settings"
 
-def convert_photo(url):
+def convert_photo(url, mode="photo"):
     temp = url.split("@")
-    picture = {k: "{}@{}".format(temp[0], v) if len(temp) > 2 else "{}{}".format(temp[0], v) for k, v in __url__.items()}
-    picture.update({"small": url})
+    picture = dict()
+
+    if mode == "photo":
+        picture = {
+            k: "{}@{}".format(temp[0], v) if len(temp) > 2
+            else "{}{}".format(temp[0], v)
+            for k, v in __url__.get(mode).items()
+        }
+
+        picture.update({"small": url})
+
+    elif mode == "media":
+        picture.update({"media" : dict()})
+        picture["media"] = {
+            k: "{}@{}".format(temp[0], v) if len(temp) > 2
+            else "{}{}".format(temp[0], v)
+            for k, v in __url__.get(mode).items()
+        }
+
+        picture["media"].update({"small": url})
+
+        picture.update({"mime_type" : "image/jpeg"})
+        picture.update({"type": "images"})
+
 
     return picture
 
