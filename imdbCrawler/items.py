@@ -29,6 +29,4 @@ class ActressBio(scrapy.Item):
 
 class ActressPhoto(scrapy.Item):
     actress_id = scrapy.Field()
-    actress_link = scrapy.Field()
-    actress_name = scrapy.Field()
-    actress_photo = scrapy.Field()
+    actress_media = scrapy.Field()
