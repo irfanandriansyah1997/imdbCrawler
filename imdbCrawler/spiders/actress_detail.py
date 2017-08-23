@@ -14,7 +14,7 @@ class ActressDetailSpider(scrapy.Spider):
     start_urls = []
     collection = None
     pipeline = set([MongoPipeline, RequiredFieldsPipeline])
-    required_fields = ["actress_name", "actress_category", "actress_filmography", "actress_height"]
+    required_fields = ["actress_filmography", "actress_height"]
     mongo_requirement = {
         "primary": "actress_id",
         "collection": "actress",
@@ -60,7 +60,13 @@ class ActressDetailSpider(scrapy.Spider):
         return ['{}{}'.format(BASE_URL, a.get('actress_id')) for a in db.get('data')]
 
     def parse(self, response):
-        name = response.css("#overview-top > h1 > span.itemprop::text").extract_first().strip()
+        name = response.css("#overview-top > h1 > span.itemprop::text").extract_first()
+        if name is not None:
+            name = name.strip()
+        else:
+            name = response.css("#overview-top > div.no-pic-wrapper > div > h1 > span.itemprop::text").extract_first()
+            name = name.strip() if name is not None else None
+
         category = [
             str(item.css('span::text').extract_first().strip().lower())
             for item in response.css("#name-job-categories > a")
