@@ -8,6 +8,7 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+from datetime import datetime
 
 BOT_NAME = 'imdbCrawler'
 
@@ -100,7 +101,7 @@ MONGODB_DB = 'movieDB'
 
 # Collection Setting
 COLLECTION = {
-    'actress' : 'actress',
+    'actress': 'actress',
     'movie': 'movie'
 }
 
@@ -111,7 +112,8 @@ ALLOWED_DOMAIN = [
     "imdb.com"
 ]
 START_URL = {
-    'actress-list' : ['http://www.imdb.com/search/name?gender=male,female&sort=starmeter,asc&start=0']
+    'film-list': ['http://www.imdb.com/search/title?release_date={}&page=0'.format(datetime.now().year)],
+    'actress-list': ['http://www.imdb.com/search/name?gender=male,female&sort=starmeter,asc&start=0']
 }
 BASE_URL = 'http://www.imdb.com'
 LOGGER_PATH = 'log'

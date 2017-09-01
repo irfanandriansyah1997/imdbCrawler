@@ -4,9 +4,10 @@ import traceback
 import pymongo
 
 from pymongo import errors
-from imdbCrawler.library.logger import Logger
-from imdbCrawler.consumer.actress import ActressConsumer
 from pymongo.mongo_client import MongoClient
+from imdbCrawler.library.logger import Logger
+from imdbCrawler.consumer.film import FilmConsumer
+from imdbCrawler.consumer.actress import ActressConsumer
 
 class MongoPipeline(object):
     def __init__(self, host, port, db, logger = 'log'):
@@ -21,6 +22,7 @@ class MongoPipeline(object):
             self.connection = MongoClient('mongodb://{}:{}'.format(host, port))
             self.db = self.connection[db]
             self.actress = ActressConsumer()
+            self.film = FilmConsumer()
 
             directory = os.path.join(
                 os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -51,7 +53,12 @@ class MongoPipeline(object):
             data = ActressConsumer(item).get_dict()
             data = {k: v for k, v in data.items() if v is not None and v != "" and v != {} and v != []}
 
-        check_data = self.get(collection, where={'actress_id': item.get(primary_key)})
+        elif 'film' in spider.name:
+            data = FilmConsumer(item).get_dict()
+            data = {k: v for k, v in data.items() if v is not None and v != "" and v != {} and v != []}
+
+
+        check_data = self.get(collection, where={primary_key: item.get(primary_key)})
 
         if check_data.get('count') > 0:
             query = self.updateOne(collection, data, {'key': primary_key, 'value': str(item.get(primary_key))})

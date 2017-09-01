@@ -19,16 +19,16 @@ class ActressConsumer:
 
     def get_dict(self, prefix='actress_'):
         response = dict()
-        response.update({'{}id'.format(prefix) : self.actress_id})
-        response.update({'{}link'.format(prefix) : self.actress_link})
-        response.update({'{}name'.format(prefix) : self.actress_name})
-        response.update({'{}photo'.format(prefix) : self.actress_photo})
+        response.update({'{}id'.format(prefix): self.actress_id})
+        response.update({'{}link'.format(prefix): self.actress_link})
+        response.update({'{}name'.format(prefix): self.actress_name})
+        response.update({'{}photo'.format(prefix): self.actress_photo})
         response.update({'{}category'.format(prefix): self.actress_category})
         response.update({'{}filmography'.format(prefix): self.actress_filmography})
         response.update({'{}height'.format(prefix): self.actress_height})
-        response.update({'{}birth'.format(prefix) : self.actress_birth})
-        response.update({'{}personal_detail'.format(prefix) : self.actress_personal_detail})
-        response.update({'{}bio'.format(prefix) : self.actress_bio})
+        response.update({'{}birth'.format(prefix): self.actress_birth})
+        response.update({'{}personal_detail'.format(prefix): self.actress_personal_detail})
+        response.update({'{}bio'.format(prefix): self.actress_bio})
         response.update({'{}media'.format(prefix): self.actress_media})
 
         return response
