@@ -15,6 +15,7 @@ class FilmConsumer:
     film_date_release = None
     film_content_rating = None
     film_storyline = None
+    film_synopsis = None
 
 
     def __init__(self, data=dict()):
@@ -41,6 +42,7 @@ class FilmConsumer:
         response.update({'{}date_release'.format(prefix): self.film_date_release})
         response.update({'{}content_rating'.format(prefix): self.film_content_rating})
         response.update({'{}storyline'.format(prefix): self.film_storyline})
+        response.update({'{}synopsis'.format(prefix): self.film_synopsis})
 
         return response
 
@@ -61,6 +63,7 @@ class FilmConsumer:
         self.film_date_release = data.get('film_date_release') if data.get('film_date_release') is not None else None
         self.film_content_rating = str(data.get('film_content_rating')).encode('utf-8') if data.get('film_content_rating') is not None else None
         self.film_storyline = str(data.get('film_storyline')).encode('utf-8') if data.get('film_storyline') is not None else None
+        self.film_synopsis = str(data.get('film_synopsis')).encode('utf-8') if data.get('film_synopsis') is not None else None
 
     def reset_dict(self):
         self.film_id = None
@@ -79,6 +82,7 @@ class FilmConsumer:
         self.film_date_release = None
         self.film_content_rating = None
         self.film_storyline = None
+        self.film_synopsis = None
 
 if __name__ == '__main__':
     a = FilmConsumer()
