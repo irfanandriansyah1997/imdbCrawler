@@ -13,7 +13,8 @@ __url__ = {
     },
     "film-list": {
         "hd": "@._V1_.jpg",
-        "medium": "@._V1_UX182_CR0,0,182,268_AL_.jpg"
+        "medium": "@._V1_UX182_CR0,0,182,268_AL_.jpg",
+        "small": "@._V1_UX67_CR0,0,67,98_AL_.jpg"
     }
 }
 
@@ -99,8 +100,6 @@ def convert_photo(url, mode="photo"):
             else "{}{}".format(temp[0], v)
             for k, v in __url__.get(mode).items()
             }
-
-        picture.update({"small": url})
 
 
     return picture
