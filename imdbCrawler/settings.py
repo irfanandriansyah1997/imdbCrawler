@@ -102,7 +102,7 @@ MONGODB_DB = 'movieDB'
 # Collection Setting
 COLLECTION = {
     'actress': 'actress',
-    'movie': 'movie'
+    'film': 'film'
 }
 
 # Crawler Setting

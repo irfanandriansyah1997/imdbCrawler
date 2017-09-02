@@ -41,3 +41,22 @@ class FilmList(scrapy.Item):
     film_genre = scrapy.Field()
     film_description_short = scrapy.Field()
 
+class FilmDetail(scrapy.Item):
+    film_id = scrapy.Field()
+    film_title = scrapy.Field()
+    film_description_short = scrapy.Field()
+    film_director = scrapy.Field()
+    film_writer = scrapy.Field()
+    film_stars = scrapy.Field()
+    film_photo = scrapy.Field()
+    film_creator = scrapy.Field()
+    film_year = scrapy.Field()
+    film_type = scrapy.Field()
+    film_length = scrapy.Field()
+    film_rating = scrapy.Field()
+    film_genre = scrapy.Field()
+    film_date_release = scrapy.Field()
+    film_content_rating = scrapy.Field()
+    film_storyline = scrapy.Field()
+
+

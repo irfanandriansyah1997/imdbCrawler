@@ -29,9 +29,10 @@ class FilmListSpider(scrapy.Spider):
     def __init__(self, data):
         scrapy.Spider.__init__(self)
         self.per_page = 50
+
         self.base_url = data.get("base_url")
-        self.collection = data.get("collection").get("actress")
-        self.allowed_domains = []
+        self.collection = data.get("collection").get("film")
+        self.allowed_domains = [x for x in data.get("allowed_domains")]
 
         self.start_urls = self.populate_start_urls(data.get("start_url").get("film-list")[0], 201)
 
