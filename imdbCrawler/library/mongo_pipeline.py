@@ -68,7 +68,8 @@ class MongoPipeline(object):
                     'Success update data into collection {} : {}'.format(collection, item.get(primary_key)), type='INFO'
                 )
         else:
-            query = self.insertOne(collection, data)
+
+            query = self.insertOne(collection, data, item.get(primary_key))
 
             if query.get('code') == 200:
                 self.logger.print_log_to_file(
@@ -215,7 +216,7 @@ class MongoPipeline(object):
         except Exception, e:
             raise ValueError(e.message)
 
-    def insertOne(self, table, data):
+    def insertOne(self, table, data, custom_id):
         """Menambahkan semua data sesuai dengan parameter
 
         Usage
@@ -224,8 +225,11 @@ class MongoPipeline(object):
 
         :param table : (String) nama tabel
         :param data : (Dictionary) data yang akan diubah
+        :param custom : (Any) _id value yang akan diubah
         :return data : (Dictionary) berisi dari data code dan pesan proses insert data
         """
+        if custom_id:
+            data['_id'] = custom_id
 
         try:
             self.db[table].insert_one(dict(data))
