@@ -56,8 +56,9 @@ class FilmSynopsisSpider(scrapy.Spider):
             "film",
             where={
                 "film_synopsis": {"$exists": False}
-            },
-            limit=78
+            }
+            # ,
+            # limit=78
         )
 
         return ['{}{}/synopsis'.format(BASE_URL, a.get('film_id')) for a in db.get('data')]

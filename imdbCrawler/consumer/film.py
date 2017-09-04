@@ -7,6 +7,7 @@ class FilmConsumer:
     film_photo = {}
     film_rating = {}
     film_genre = []
+    film_media = []
     film_description_short = None
     film_director = {}
     film_writer = {}
@@ -31,6 +32,7 @@ class FilmConsumer:
         response.update({'{}type'.format(prefix): self.film_type})
         response.update({'{}title'.format(prefix): self.film_title})
         response.update({'{}genre'.format(prefix): self.film_genre})
+        response.update({'{}media'.format(prefix): self.film_media})
         response.update({'{}photo'.format(prefix): self.film_photo})
         response.update({'{}length'.format(prefix): self.film_length})
         response.update({'{}rating'.format(prefix): self.film_rating})
@@ -55,6 +57,7 @@ class FilmConsumer:
         self.film_photo = data.get('film_photo') if data.get('film_photo') is not None else {}
         self.film_rating = data.get('film_rating') if data.get('film_rating') is not None else {}
         self.film_genre = data.get('film_genre') if data.get('film_genre') is not None else []
+        self.film_media = data.get('film_media') if data.get('film_media') is not None else []
         self.film_description_short = str(data.get('film_description_short')).encode('utf-8') if data.get('film_description_short') is not None else None
         self.film_director = data.get('film_director') if data.get('film_director') is not None else {}
         self.film_writer = data.get('film_writer') if data.get('film_writer') is not None else {}
@@ -74,6 +77,7 @@ class FilmConsumer:
         self.film_photo = {}
         self.film_rating = {}
         self.film_genre = []
+        self.film_media = []
         self.film_description_short = None
         self.film_director = {}
         self.film_writer = {}
