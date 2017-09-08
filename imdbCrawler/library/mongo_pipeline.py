@@ -44,6 +44,21 @@ class MongoPipeline(object):
             logger=crawler.settings.get('LOGGER_PATH')
         )
 
+    def reprocess_item(self, type, id):
+        result = self.get("reprocess_item", where={"id": id, "type": type})
+
+        if result.get("count") == 0:
+            data = dict()
+            data.update({"id": id})
+            data.update({"type": type})
+            query = self.insertOne("reprocess_item", data, id)
+
+            if query.get('code') == 200:
+                self.logger.print_log_to_file(
+                    'Success insert data into collection reprocess {}: {}'.format(type, id), type='INFO',
+                    print_out=False
+                )
+
     def process_item(self, item, spider):
         data = dict()
         primary_key = spider.mongo_requirement.get('primary')
@@ -67,6 +82,9 @@ class MongoPipeline(object):
                 self.logger.print_log_to_file(
                     'Success update data into collection {} : {}'.format(collection, item.get(primary_key)), type='INFO'
                 )
+
+                self.remove("reprocess_item", {"id": item.get(primary_key)})
+
         else:
 
             query = self.insertOne(collection, data, item.get(primary_key))
@@ -75,6 +93,8 @@ class MongoPipeline(object):
                 self.logger.print_log_to_file(
                     'Success insert data into collection {} : {}'.format(collection, item.get(primary_key)), type='INFO'
                 )
+
+                self.remove("reprocess_item", {"id" : item.get(primary_key)})
 
 
         return item
@@ -251,5 +271,18 @@ class MongoPipeline(object):
                     raise ValueError({'code': 404, 'message': 'No matched Data'})
             else:
                 raise ValueError({'code': 500, 'message': 'Attribut data is not found'})
+        except Exception, e:
+            raise ValueError(e)
+
+    def remove(self, table, filter):
+        try:
+            if filter is not None:
+                result = self.db[table].delete_many(filter)
+                if result.deleted_count:
+                    return {'code': 200, 'message': 'Delete Success'}
+                else:
+                    return {'code': 200, 'message': 'No Matched Data'}
+            else:
+                raise ValueError({'code': 500, 'message': 'Attribut filter is not found'})
         except Exception, e:
             raise ValueError(e)

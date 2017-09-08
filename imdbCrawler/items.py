@@ -67,3 +67,8 @@ class FilmSynopsis(scrapy.Item):
 class FilmPhoto(scrapy.Item):
     film_id = scrapy.Field()
     film_media = scrapy.Field()
+
+class FilmCrew(scrapy.Item):
+    film_id = scrapy.Field()
+    film_crew = scrapy.Field()
+    film_cast = scrapy.Field()

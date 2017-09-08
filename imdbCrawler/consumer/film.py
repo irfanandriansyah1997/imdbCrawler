@@ -17,6 +17,8 @@ class FilmConsumer:
     film_content_rating = None
     film_storyline = None
     film_synopsis = None
+    film_crew = []
+    film_cast = []
 
 
     def __init__(self, data=dict()):
@@ -45,6 +47,8 @@ class FilmConsumer:
         response.update({'{}content_rating'.format(prefix): self.film_content_rating})
         response.update({'{}storyline'.format(prefix): self.film_storyline})
         response.update({'{}synopsis'.format(prefix): self.film_synopsis})
+        response.update({'{}crew'.format(prefix): self.film_crew})
+        response.update({'{}cast'.format(prefix): self.film_cast})
 
         return response
 
@@ -67,6 +71,8 @@ class FilmConsumer:
         self.film_content_rating = str(data.get('film_content_rating')).encode('utf-8') if data.get('film_content_rating') is not None else None
         self.film_storyline = str(data.get('film_storyline')).encode('utf-8') if data.get('film_storyline') is not None else None
         self.film_synopsis = str(data.get('film_synopsis')).encode('utf-8') if data.get('film_synopsis') is not None else None
+        self.film_crew = data.get('film_crew') if data.get('film_crew') is not None else []
+        self.film_cast = data.get('film_cast') if data.get('film_cast') is not None else []
 
     def reset_dict(self):
         self.film_id = None
@@ -87,6 +93,8 @@ class FilmConsumer:
         self.film_content_rating = None
         self.film_storyline = None
         self.film_synopsis = None
+        self.film_crew = []
+        self.film_cast = []
 
 if __name__ == '__main__':
     a = FilmConsumer()

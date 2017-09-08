@@ -164,8 +164,9 @@ class FilmDetailSpider(scrapy.Spider):
         storyline = response.css("#titleStoryLine > div[itemprop='description'] > p::text").extract()
         storyline = "\n".join([unicodedata.normalize('NFKD', x.strip()).encode('ascii', 'ignore') if x else "" for x in storyline])
 
-        image = convert_photo(response.css("div.poster > a > img::attr(src)")
-                              .extract_first().strip(), "film-list")
+        image = response.css("div.poster > a > img::attr(src)").extract_first()
+        if image:
+            image = convert_photo(image.strip(), "film-list")
 
         url = self.replaceText(response.url.replace(self.base_url, ''), '?')
 
