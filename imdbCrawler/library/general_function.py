@@ -5,6 +5,7 @@ __author__ = "Irfan Andriansyah"
 __url__ = {
     "photo": {
         "hd": "@._V1_.jpg",
+        "small": "@._V1._SX54_CR0,0,54,74_.jpg",
         "medium": "@._V1_UY317_CR121,0,214,317_AL_.jpg"
     },
     "media": {
@@ -79,8 +80,6 @@ def convert_photo(url, mode="photo"):
             else "{}{}".format(temp[0], v)
             for k, v in __url__.get(mode).items()
         }
-
-        picture.update({"small": url})
 
     elif mode == "media":
         picture.update({"media" : dict()})

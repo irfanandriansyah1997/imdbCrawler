@@ -55,8 +55,7 @@ class MongoPipeline(object):
 
             if query.get('code') == 200:
                 self.logger.print_log_to_file(
-                    'Success insert data into collection reprocess {}: {}'.format(type, id), type='INFO',
-                    print_out=False
+                    'Success insert data into collection reprocess {}: {}'.format(type, id), type='INFO'
                 )
 
     def process_item(self, item, spider):
