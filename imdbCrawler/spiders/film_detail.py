@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import re
 import scrapy
 
@@ -40,7 +39,7 @@ class FilmDetailSpider(scrapy.Spider):
             data.get("database").get("db")
         )
         self.start_urls = self.populate_start_urls()
-
+        # self.start_urls = ["http://www.imdb.com/title/tt1398426"]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -61,8 +60,7 @@ class FilmDetailSpider(scrapy.Spider):
             "film",
             where={
                 "film_stars": {"$exists": False}
-            },
-            limit=20
+            }
         )
 
         return ['{}{}'.format(BASE_URL, a.get('film_id')) for a in db.get('data')]
@@ -94,7 +92,7 @@ class FilmDetailSpider(scrapy.Spider):
 
         short_description = response.css(".plot_summary_wrapper > .plot_summary > .summary_text::text").extract_first()
         if short_description:
-            short_description = short_description.strip()
+            short_description = unicodedata.normalize('NFKD', short_description.strip()).encode('ascii', 'ignore')
 
         person_title = response.css("div.plot_summary > .credit_summary_item > h4::text") \
             .extract()
@@ -142,7 +140,14 @@ class FilmDetailSpider(scrapy.Spider):
         time = dict()
         date_release = response.css(".titleBar > .title_wrapper > .subtext > a[href*='title'] > meta::attr(content)").extract_first()
         if date_release:
-            time.update({"iso": datetime.strptime(date_release.strip(), '%Y-%M-%d')})
+            try:
+                time.update({"iso": datetime.strptime(date_release.strip(), '%Y-%M-%d')})
+            except Exception:
+                pass
+                time.update({"iso": datetime.strptime(date_release.strip(), '%Y')})
+            finally:
+                print 'done'
+
             time.update({"year": time.get("iso").strftime("%Y")})
             time.update({"month": time.get("iso").strftime("%m")})
             time.update({"date": time.get("iso").strftime("%d")})
@@ -157,10 +162,11 @@ class FilmDetailSpider(scrapy.Spider):
             contentRating = contentRating.strip()
 
         storyline = response.css("#titleStoryLine > div[itemprop='description'] > p::text").extract()
-        storyline = "\n".join([x.strip() if x else "" for x in storyline])
+        storyline = "\n".join([unicodedata.normalize('NFKD', x.strip()).encode('ascii', 'ignore') if x else "" for x in storyline])
 
-        image = convert_photo(response.css("div.poster > a > img::attr(src)")
-                              .extract_first().strip(), "film-list")
+        image = response.css("div.poster > a > img::attr(src)").extract_first()
+        if image:
+            image = convert_photo(image.strip(), "film-list")
 
         url = self.replaceText(response.url.replace(self.base_url, ''), '?')
 

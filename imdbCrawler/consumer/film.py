@@ -7,6 +7,7 @@ class FilmConsumer:
     film_photo = {}
     film_rating = {}
     film_genre = []
+    film_media = []
     film_description_short = None
     film_director = {}
     film_writer = {}
@@ -15,6 +16,9 @@ class FilmConsumer:
     film_date_release = None
     film_content_rating = None
     film_storyline = None
+    film_synopsis = None
+    film_crew = []
+    film_cast = []
 
 
     def __init__(self, data=dict()):
@@ -30,6 +34,7 @@ class FilmConsumer:
         response.update({'{}type'.format(prefix): self.film_type})
         response.update({'{}title'.format(prefix): self.film_title})
         response.update({'{}genre'.format(prefix): self.film_genre})
+        response.update({'{}media'.format(prefix): self.film_media})
         response.update({'{}photo'.format(prefix): self.film_photo})
         response.update({'{}length'.format(prefix): self.film_length})
         response.update({'{}rating'.format(prefix): self.film_rating})
@@ -41,6 +46,9 @@ class FilmConsumer:
         response.update({'{}date_release'.format(prefix): self.film_date_release})
         response.update({'{}content_rating'.format(prefix): self.film_content_rating})
         response.update({'{}storyline'.format(prefix): self.film_storyline})
+        response.update({'{}synopsis'.format(prefix): self.film_synopsis})
+        response.update({'{}crew'.format(prefix): self.film_crew})
+        response.update({'{}cast'.format(prefix): self.film_cast})
 
         return response
 
@@ -53,6 +61,7 @@ class FilmConsumer:
         self.film_photo = data.get('film_photo') if data.get('film_photo') is not None else {}
         self.film_rating = data.get('film_rating') if data.get('film_rating') is not None else {}
         self.film_genre = data.get('film_genre') if data.get('film_genre') is not None else []
+        self.film_media = data.get('film_media') if data.get('film_media') is not None else []
         self.film_description_short = str(data.get('film_description_short')).encode('utf-8') if data.get('film_description_short') is not None else None
         self.film_director = data.get('film_director') if data.get('film_director') is not None else {}
         self.film_writer = data.get('film_writer') if data.get('film_writer') is not None else {}
@@ -61,6 +70,9 @@ class FilmConsumer:
         self.film_date_release = data.get('film_date_release') if data.get('film_date_release') is not None else None
         self.film_content_rating = str(data.get('film_content_rating')).encode('utf-8') if data.get('film_content_rating') is not None else None
         self.film_storyline = str(data.get('film_storyline')).encode('utf-8') if data.get('film_storyline') is not None else None
+        self.film_synopsis = str(data.get('film_synopsis')).encode('utf-8') if data.get('film_synopsis') is not None else None
+        self.film_crew = data.get('film_crew') if data.get('film_crew') is not None else []
+        self.film_cast = data.get('film_cast') if data.get('film_cast') is not None else []
 
     def reset_dict(self):
         self.film_id = None
@@ -71,6 +83,7 @@ class FilmConsumer:
         self.film_photo = {}
         self.film_rating = {}
         self.film_genre = []
+        self.film_media = []
         self.film_description_short = None
         self.film_director = {}
         self.film_writer = {}
@@ -79,6 +92,9 @@ class FilmConsumer:
         self.film_date_release = None
         self.film_content_rating = None
         self.film_storyline = None
+        self.film_synopsis = None
+        self.film_crew = []
+        self.film_cast = []
 
 if __name__ == '__main__':
     a = FilmConsumer()
