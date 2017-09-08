@@ -67,6 +67,9 @@ class FilmDetailSpider(scrapy.Spider):
         return ['{}{}/fullcredits'.format(BASE_URL, a.get('film_id')) for a in db.get('data')]
 
     def parse(self, response):
+        reprocess = dict()
+        reprocess.update({"data": []})
+
         heading = response.css("#fullcredits_content > h4::text").extract()
         table = response.css("#fullcredits_content > table")
         tic()
@@ -79,9 +82,9 @@ class FilmDetailSpider(scrapy.Spider):
             name = item.css("tr > td.name > a::text").extract()
             link = item.css("tr > td.name > a::attr(href)").extract()
             credit = item.css("tr > td.credit::text").extract()
-            for item in link:
-                self.reprocessActress(re.sub(r"name.+?", "", item.strip()).split("?")[0].strip("/"))
 
+            for item in link:
+                reprocess["data"].append(re.sub(r"name.+?", "", item.strip()).split("?")[0].strip("/"))
 
             temporary = [{
                         "name": unicodedata.normalize('NFKD', x.strip()).encode('ascii', 'ignore'),
@@ -121,13 +124,16 @@ class FilmDetailSpider(scrapy.Spider):
                 temporary.update({"credit": credit.lstrip(" ")})
                 temporary.update({"actress_id": re.sub(r"name.+?", "", link.strip()).split("?")[0].strip("/")})
 
-                self.reprocessActress(temporary.get("actress_id"))
+                reprocess["data"].append(temporary.get("actress_id"))
 
                 list_cast.append(temporary)
 
-        # data.update({"cast" : list_cash})
         toc(save=True, fmt=True)
         url = self.replaceText(response.url.replace(self.base_url, ''), '?')
+
+        reprocess.update({"id": re.sub(r"title.+?", "", url).strip("/")})
+        reprocess.update({"status": "checked"})
+        self.reprocessActress(reprocess, reprocess.get("id"))
 
         item = FilmCrew()
         item.update({"film_id": re.sub(r"title.+?", "", url).strip("/")})
@@ -140,8 +146,12 @@ class FilmDetailSpider(scrapy.Spider):
         there = re.compile(re.escape('{}'.format(keyword)) + '.*')
         return there.sub('', text)[1:].replace('/fullcredits', '')
 
-    def reprocessActress(self, id):
-        result = self.db.get("actress", where={"actress_id" : id})
+    def reprocessActress(self, data, id):
+        collection = "reprocess_item_lapak"
+        
+        result = self.db.get(collection, where={"id": id})
 
         if result.get("count") == 0:
-            self.db.reprocess_item("actress", id)
+            self.db.insertOne(collection, data, id)
+        else:
+            self.db.updateOne(collection, data, {'key': "id", 'value': str(id)})
