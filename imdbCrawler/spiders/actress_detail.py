@@ -5,6 +5,7 @@ import unicodedata
 
 from imdbCrawler.items import ActressDetail
 from imdbCrawler.library.mongo_pipeline import MongoPipeline
+from imdbCrawler.library.general_function import convert_photo
 from imdbCrawler.library.required_fields_pipeline import RequiredFieldsPipeline
 
 class ActressDetailSpider(scrapy.Spider):
@@ -32,7 +33,8 @@ class ActressDetailSpider(scrapy.Spider):
                     data.get("database").get("db")
                 )
 
-        self.start_urls = self.populate_start_urls()
+        # self.start_urls = self.populate_start_urls()
+        self.start_urls = ["http://www.imdb.com/name/nm3592338"]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -60,6 +62,8 @@ class ActressDetailSpider(scrapy.Spider):
         return ['{}{}'.format(BASE_URL, a.get('actress_id')) for a in db.get('data')]
 
     def parse(self, response):
+        reprocess = dict()
+        reprocess.update({"data": []})
         name = response.css("#overview-top > h1 > span.itemprop::text").extract_first()
         if name is not None:
             name = name.strip()
@@ -74,16 +78,28 @@ class ActressDetailSpider(scrapy.Spider):
 
         film_component = response.css("#filmography > div > div.filmo-row")
         filmography = [self.parsingFilm(item) for item in film_component]
-        height = response.css("#details-height::text").extract()
+        for item in filmography:
+            reprocess["data"].append(item.get("film_id"))
 
+        height = response.css("#details-height::text").extract()
         height = unicodedata.normalize('NFKD', height[1].strip()).encode('ascii','ignore') if height else '-'
 
+        image = response.css("#name-poster::attr(src)").extract_first()
+        if image:
+            image = convert_photo(image.strip())
+
+
         url = self.replaceText(response.url.replace(self.base_url, ''), '?')
+
+        reprocess.update({"id": re.sub(r"name.+?", "", url).strip("/")})
+        reprocess.update({"status": "checked"})
+        self.reprocessFilm(reprocess, reprocess.get("id"))
 
         item = ActressDetail()
         item.update({"actress_id": re.sub(r"name.+?", "", url).strip("/")})
         item.update({"actress_name": name})
         item.update({"actress_category": category})
+        item.update({"actress_photo": image})
         item.update({"actress_filmography": filmography})
         item.update({"actress_height": height})
 
@@ -104,7 +120,19 @@ class ActressDetailSpider(scrapy.Spider):
             year = {'start': 'Info Not Found', 'end': 'Info Not Found'}
 
         film = component.css("b > a::text").extract_first().strip()
+        id = component.css("b > a::attr(href)").extract_first().strip()
+        id = re.sub(r"title.+?", "", id).split("/")[1]
 
-        return {'year' : year, 'film' : film}
+        return {"year": year, "film": film, "film_id": id}
+
+    def reprocessFilm(self, data, id):
+        collection = "reprocess_item_film"
+
+        result = self.db.get(collection, where={"id": id})
+
+        if result.get("count") == 0:
+            self.db.insertOne(collection, data, id)
+        else:
+            self.db.updateOne(collection, data, {'key': "id", 'value': str(id)})
 
 

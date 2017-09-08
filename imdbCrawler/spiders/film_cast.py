@@ -38,8 +38,8 @@ class FilmDetailSpider(scrapy.Spider):
             data.get("database").get("port"),
             data.get("database").get("db")
         )
-        # self.start_urls = self.populate_start_urls()
-        self.start_urls = ["http://www.imdb.com/title/tt3315342/fullcredits"]
+        self.start_urls = self.populate_start_urls()
+        # self.start_urls = ["http://www.imdb.com/title/tt3315342/fullcredits"]
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -74,7 +74,7 @@ class FilmDetailSpider(scrapy.Spider):
         table = response.css("#fullcredits_content > table")
         tic()
         heading = [i.strip() if i.strip() != '' else None for i in heading]
-        heading = filter(lambda x : x is not None and x != 'Cast', heading)
+        heading = filter(lambda x: x is not None and x != 'Cast', heading)
 
         table_data = list()
         for item in table:
@@ -147,7 +147,7 @@ class FilmDetailSpider(scrapy.Spider):
         return there.sub('', text)[1:].replace('/fullcredits', '')
 
     def reprocessActress(self, data, id):
-        collection = "reprocess_item_lapak"
+        collection = "reprocess_item_actress"
         
         result = self.db.get(collection, where={"id": id})
 

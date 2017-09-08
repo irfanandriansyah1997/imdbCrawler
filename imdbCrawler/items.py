@@ -16,6 +16,7 @@ class ActressList(scrapy.Item):
 class ActressDetail(scrapy.Item):
     actress_id = scrapy.Field()
     actress_name = scrapy.Field()
+    actress_photo = scrapy.Field()
     actress_height = scrapy.Field()
     actress_category = scrapy.Field()
     actress_filmography = scrapy.Field()
