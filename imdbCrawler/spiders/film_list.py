@@ -35,7 +35,8 @@ class FilmListSpider(scrapy.Spider):
         self.allowed_domains = [x for x in data.get("allowed_domains")]
 
         # self.start_urls = self.populate_start_urls(data.get("start_url").get("film-list")[0], 201)
-        self.start_urls = self.populate_start_urls("http://www.imdb.com/search/title?release_date=2005&page=0", 201)
+        self.start_urls = self.populate_start_urls("http://www.imdb.com/search/title?release_date=2017&page=0", 3)
+
     def populate_start_urls(self, url, range_loop):
         return [url.replace("page=0", "page={}".format(index)) for index in range(0, range_loop)]
 

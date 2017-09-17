@@ -82,4 +82,4 @@ class FilmSynopsisSpider(scrapy.Spider):
 
     def replaceText(self, text, keyword):
         there = re.compile(re.escape('{}'.format(keyword)) + '.*')
-        return there.sub('', text)[1:].replace('/synopsis','')
+        return there.sub('', text)[1:].replace('/synopsis','').replace('/plotsummary','')
