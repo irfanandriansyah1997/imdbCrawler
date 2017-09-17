@@ -97,7 +97,7 @@ LOG_LEVEL = 'INFO'
 # Mongo Setting
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
-MONGODB_DB = 'movieDB'
+MONGODB_DB = 'imdb'
 
 # Collection Setting
 COLLECTION = {

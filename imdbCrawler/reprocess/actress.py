@@ -13,12 +13,18 @@ class ActessReprocess:
         collection = "reprocess_item_actress"
 
         response = self.db.get(collection, where={"status": "checked"})
-
+        print response.get("count")
         for item in response.get("data"):
+            print item.get('id')
             for child in item.get("data"):
+                print child
                 status = self.db.get("actress", where={"actress_id": child})
+                print status.get("count")
                 if status.get("count") == 0:
                     self.db.reprocess_item("actress", child)
+                    print 'insert'
+                else:
+                    print 'avaiable'
 
             self.db.updateOne(collection, {"status": "save"}, {'key': "id", 'value': str(item.get("id"))})
 
