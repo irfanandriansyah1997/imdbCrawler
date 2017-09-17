@@ -57,6 +57,10 @@ class MongoPipeline(object):
                 self.logger.print_log_to_file(
                     'Success insert data into collection reprocess {}: {}'.format(type, id), type='INFO'
                 )
+        else:
+            self.logger.print_log_to_file(
+                'Pass insert data cause data is duplicate {}: {}'.format(type, id), type='INFO'
+            )
 
     def process_item(self, item, spider):
         data = dict()

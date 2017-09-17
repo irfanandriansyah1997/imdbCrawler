@@ -59,8 +59,8 @@ class FilmDetailSpider(scrapy.Spider):
         db = self.db.get(
             "film",
             where={
-                # "film_crew": {"$exists": False},
-                # "film_cast": {"$exists": False}
+                "film_crew": {"$exists": False},
+                "film_cast": {"$exists": False}
             }
         )
 

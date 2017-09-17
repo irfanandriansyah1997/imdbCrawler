@@ -33,8 +33,8 @@ class ActressDetailSpider(scrapy.Spider):
                     data.get("database").get("db")
                 )
 
-        # self.start_urls = self.populate_start_urls()
-        self.start_urls = ["http://www.imdb.com/name/nm3592338"]
+        self.start_urls = self.populate_start_urls()
+        # self.start_urls = ["http://www.imdb.com/name/nm3592338"]
 
     @classmethod
     def from_crawler(cls, crawler):
